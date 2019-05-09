@@ -32,27 +32,20 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  *********************************************************************/
 
-#include <pluginlib/class_list_macros.h>
 #include <nodelet/nodelet.h>
+#include <pluginlib/class_list_macros.h>
 
 //#include "DbwNode.h"
 #include <dbw_mkz_can/DbwNode.h>
 
-namespace dbw_mkz_can
-{
+namespace dbw_mkz_can {
 
-class DbwNodelet : public nodelet::Nodelet
-{
+class DbwNodelet : public nodelet::Nodelet {
 public:
-  DbwNodelet()
-  {
-  }
-  ~DbwNodelet()
-  {
-  }
+  DbwNodelet() {}
+  ~DbwNodelet() {}
 
-  void onInit(void)
-  {
+  void onInit(void) {
     node_.reset(new DbwNode(getNodeHandle(), getPrivateNodeHandle()));
   }
 
@@ -65,4 +58,4 @@ private:
 // Register this plugin with pluginlib.  Names must match nodelets.xml.
 //
 // parameters: package, class name, class type, base class type
-PLUGINLIB_DECLARE_CLASS(dbw_mkz_can, DbwNodelet, dbw_mkz_can::DbwNodelet, nodelet::Nodelet);
+PLUGINLIB_EXPORT_CLASS(dbw_mkz_can::DbwNodelet, nodelet::Nodelet);

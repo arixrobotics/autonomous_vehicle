@@ -1,5 +1,5 @@
-#include <pluginlib/class_list_macros.h>
 #include <nodelet/nodelet.h>
+#include <pluginlib/class_list_macros.h>
 
 #include <can_sim_tc/CanSimNode.h>
 
@@ -30,4 +30,4 @@ private:
 // Register this plugin with pluginlib.  Names must match nodelets.xml.
 //
 // parameters: package, class name, class type, base class type
-PLUGINLIB_DECLARE_CLASS(can_sim_tc, CanSimTcNodeletClass, can_sim_tc::CanSimTcNodeletClass, nodelet::Nodelet);
+PLUGINLIB_EXPORT_CLASS(can_sim_tc::CanSimTcNodeletClass, nodelet::Nodelet);
