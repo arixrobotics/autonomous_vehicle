@@ -1,7 +1,7 @@
 /*********************************************************************
  * Software License Agreement (BSD License)
  *
- *  Copyright (c) 2015-2016, Dataspeed Inc.
+ *  Copyright (c) 2015-2019, Dataspeed Inc.
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
@@ -38,8 +38,8 @@
 #include <ros/ros.h>
 
 // ROS messages
+#include <can_msgs/Frame.h>
 #include <dataspeed_can_msg_filters/ApproximateTime.h>
-#include <dataspeed_can_msgs/CanMessageStamped.h>
 #include <dbw_mkz_msgs/BrakeCmd.h>
 #include <dbw_mkz_msgs/BrakeReport.h>
 #include <dbw_mkz_msgs/ThrottleCmd.h>
@@ -50,13 +50,14 @@
 #include <dbw_mkz_msgs/GearReport.h>
 #include <dbw_mkz_msgs/TurnSignalCmd.h>
 #include <dbw_mkz_msgs/Misc1Report.h>
+#include <dbw_mkz_msgs/WheelPositionReport.h>
 #include <dbw_mkz_msgs/WheelSpeedReport.h>
 #include <dbw_mkz_msgs/FuelLevelReport.h>
-#include <dbw_mkz_msgs/SuspensionReport.h>
 #include <dbw_mkz_msgs/TirePressureReport.h>
 #include <dbw_mkz_msgs/SurroundReport.h>
 #include <dbw_mkz_msgs/BrakeInfoReport.h>
 #include <dbw_mkz_msgs/ThrottleInfoReport.h>
+#include <dbw_mkz_msgs/DriverAssistReport.h>
 #include <sensor_msgs/Imu.h>
 #include <sensor_msgs/NavSatFix.h>
 #include <sensor_msgs/TimeReference.h>
@@ -65,6 +66,10 @@
 #include <geometry_msgs/TwistStamped.h>
 #include <std_msgs/Empty.h>
 #include <std_msgs/Bool.h>
+#include <std_msgs/String.h>
+
+// Platform and module version map
+#include <dbw_mkz_can/PlatformMap.h>
 
 namespace dbw_mkz_can
 {
@@ -79,9 +84,9 @@ private:
   void timerCallback(const ros::TimerEvent& event);
   void recvEnable(const std_msgs::Empty::ConstPtr& msg);
   void recvDisable(const std_msgs::Empty::ConstPtr& msg);
-  void recvCAN(const dataspeed_can_msgs::CanMessageStamped::ConstPtr& msg);
-  void recvCanImu(const std::vector<dataspeed_can_msgs::CanMessageStamped::ConstPtr> &msgs);
-  void recvCanGps(const std::vector<dataspeed_can_msgs::CanMessageStamped::ConstPtr> &msgs);
+  void recvCAN(const can_msgs::Frame::ConstPtr& msg);
+  void recvCanImu(const std::vector<can_msgs::Frame::ConstPtr> &msgs);
+  void recvCanGps(const std::vector<can_msgs::Frame::ConstPtr> &msgs);
   void recvBrakeCmd(const dbw_mkz_msgs::BrakeCmd::ConstPtr& msg);
   void recvThrottleCmd(const dbw_mkz_msgs::ThrottleCmd::ConstPtr& msg);
   void recvSteeringCmd(const dbw_mkz_msgs::SteeringCmd::ConstPtr& msg);
@@ -102,6 +107,13 @@ private:
   bool fault_watchdog_;
   bool fault_watchdog_using_brakes_;
   bool fault_watchdog_warned_;
+  bool timeout_brakes_;
+  bool timeout_throttle_;
+  bool timeout_steering_;
+  bool enabled_brakes_;
+  bool enabled_throttle_;
+  bool enabled_steering_;
+  bool gear_warned_;
   inline bool fault() { return fault_brakes_ || fault_throttle_ || fault_steering_ || fault_steering_cal_ || fault_watchdog_; }
   inline bool override() { return override_brake_ || override_throttle_ || override_steering_ || override_gear_; }
   inline bool clear() { return enable_ && override(); }
@@ -110,10 +122,13 @@ private:
   void enableSystem();
   void disableSystem();
   void buttonCancel();
-  void overrideBrake(bool override);
-  void overrideThrottle(bool override);
-  void overrideSteering(bool override);
+  void overrideBrake(bool override, bool timeout);
+  void overrideThrottle(bool override, bool timeout);
+  void overrideSteering(bool override, bool timeout);
   void overrideGear(bool override);
+  void timeoutBrake(bool timeout, bool enabled);
+  void timeoutThrottle(bool timeout, bool enabled);
+  void timeoutSteering(bool timeout, bool enabled);
   void faultBrakes(bool fault);
   void faultThrottle(bool fault);
   void faultSteering(bool fault);
@@ -133,11 +148,35 @@ private:
   sensor_msgs::JointState joint_state_;
   void publishJointStates(const ros::Time &stamp, const dbw_mkz_msgs::WheelSpeedReport *wheels, const dbw_mkz_msgs::SteeringReport *steering);
 
-  // Brake lights
-  bool boo_status_;
-  bool boo_control_;
-  double boo_thresh_lo_;
-  double boo_thresh_hi_;
+  // The signum function: https://stackoverflow.com/questions/1903954/
+  template <typename T> static int sgn(T val) {
+      return ((T)0 < val) - (val < (T)0);
+  }
+
+  // Sign of the wheel velocities, to be multiplied with vehicle speed
+  float speedSign() const {
+    return sgn(joint_state_.velocity[JOINT_FL]) + sgn(joint_state_.velocity[JOINT_FR]) +
+           sgn(joint_state_.velocity[JOINT_RL]) + sgn(joint_state_.velocity[JOINT_RR]) < 0 ? -1.0 : 1.0;
+  }
+
+  // Licensing
+  std::string vin_;
+  std::string date_;
+
+  // Firmware Versions
+  PlatformMap firmware_;
+
+  // Frame ID
+  std::string frame_id_;
+
+  // Command warnings
+  bool warn_cmds_;
+
+  // Buttons (enable/disable)
+  bool buttons_;
+
+  // Pedal LUTs (local/embedded)
+  bool pedal_luts_;
 
   // Ackermann steering
   double acker_wheelbase_;
@@ -162,19 +201,21 @@ private:
   ros::Publisher pub_gear_;
   ros::Publisher pub_misc_1_;
   ros::Publisher pub_wheel_speeds_;
-  ros::Publisher pub_suspension_;
+  ros::Publisher pub_wheel_positions_;
   ros::Publisher pub_tire_pressure_;
   ros::Publisher pub_fuel_level_;
   ros::Publisher pub_surround_;
   ros::Publisher pub_sonar_cloud_;
   ros::Publisher pub_brake_info_;
   ros::Publisher pub_throttle_info_;
+  ros::Publisher pub_driver_assist_;
   ros::Publisher pub_imu_;
   ros::Publisher pub_gps_fix_;
   ros::Publisher pub_gps_vel_;
   ros::Publisher pub_gps_time_;
   ros::Publisher pub_joint_states_;
   ros::Publisher pub_twist_;
+  ros::Publisher pub_vin_;
   ros::Publisher pub_sys_enable_;
 
   // Time Synchronization
@@ -185,3 +226,4 @@ private:
 } // namespace dbw_mkz_can
 
 #endif // _DBW_NODE_H_
+
