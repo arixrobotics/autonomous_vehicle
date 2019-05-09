@@ -35,43 +35,44 @@
 #ifndef TWISTCONTROLLERNODE_H_
 #define TWISTCONTROLLERNODE_H_
 
-#include <ros/ros.h>
-#include <std_msgs/Bool.h>
-#include <sensor_msgs/Imu.h>
-#include <dbw_mkz_msgs/ThrottleCmd.h>
-#include <dbw_mkz_msgs/ThrottleReport.h>
 #include <dbw_mkz_msgs/BrakeCmd.h>
 #include <dbw_mkz_msgs/BrakeReport.h>
+#include <dbw_mkz_msgs/FuelLevelReport.h>
 #include <dbw_mkz_msgs/SteeringCmd.h>
 #include <dbw_mkz_msgs/SteeringReport.h>
-#include <dbw_mkz_msgs/FuelLevelReport.h>
+#include <dbw_mkz_msgs/ThrottleCmd.h>
+#include <dbw_mkz_msgs/ThrottleReport.h>
 #include <dbw_mkz_msgs/TwistCmd.h>
 #include <geometry_msgs/TwistStamped.h>
+#include <ros/ros.h>
+#include <sensor_msgs/Imu.h>
+#include <std_msgs/Bool.h>
 
-#include <dynamic_reconfigure/server.h>
 #include <dbw_mkz_twist_controller/ControllerConfig.h>
+#include <dynamic_reconfigure/server.h>
 
-#include "YawControl.h"
-#include "PidControl.h"
 #include "LowPass.h"
+#include "PidControl.h"
+#include "YawControl.h"
 
 #include <std_msgs/Float64.h>
 
 namespace dbw_mkz_twist_controller {
 
-class TwistControllerNode{
+class TwistControllerNode {
 public:
   TwistControllerNode(ros::NodeHandle n, ros::NodeHandle pn);
+
 private:
-  void reconfig(ControllerConfig& config, uint32_t level);
-  void controlCallback(const ros::TimerEvent& event);
-  void recvTwist(const geometry_msgs::Twist::ConstPtr& msg);
-  void recvTwist2(const dbw_mkz_msgs::TwistCmd::ConstPtr& msg);
-  void recvTwist3(const geometry_msgs::TwistStamped::ConstPtr& msg);
-  void recvSteeringReport(const dbw_mkz_msgs::SteeringReport::ConstPtr& msg);
-  void recvImu(const sensor_msgs::Imu::ConstPtr& msg);
-  void recvEnable(const std_msgs::Bool::ConstPtr& msg);
-  void recvFuel(const dbw_mkz_msgs::FuelLevelReport::ConstPtr& msg);
+  void reconfig(ControllerConfig &config, uint32_t level);
+  void controlCallback(const ros::TimerEvent &event);
+  void recvTwist(const geometry_msgs::Twist::ConstPtr &msg);
+  void recvTwist2(const dbw_mkz_msgs::TwistCmd::ConstPtr &msg);
+  void recvTwist3(const geometry_msgs::TwistStamped::ConstPtr &msg);
+  void recvSteeringReport(const dbw_mkz_msgs::SteeringReport::ConstPtr &msg);
+  void recvImu(const sensor_msgs::Imu::ConstPtr &msg);
+  void recvEnable(const std_msgs::Bool::ConstPtr &msg);
+  void recvFuel(const dbw_mkz_msgs::FuelLevelReport::ConstPtr &msg);
 
   ros::Publisher pub_throttle_;
   ros::Publisher pub_brake_;
@@ -106,10 +107,10 @@ private:
   double acker_track_;
   double steering_ratio_;
 
-  static const double GAS_DENSITY = 2.858; // kg/gal
+  static constexpr double GAS_DENSITY = 2.858; // kg/gal
   static double mphToMps(double mph) { return mph * 0.44704; }
 };
 
-}
+} // namespace dbw_mkz_twist_controller
 
 #endif /* TWISTCONTROLLERNODE_H_ */
