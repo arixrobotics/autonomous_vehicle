@@ -1,12 +1,12 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(dbw_mkz_joystick_demo)
 
-set(${PROJECT_NAME}_CATKIN_DEPS
+find_package(catkin REQUIRED COMPONENTS
   roscpp
+  std_msgs
+  sensor_msgs
   dbw_mkz_msgs
 )
-
-find_package(catkin REQUIRED COMPONENTS ${${PROJECT_NAME}_CATKIN_DEPS})
 
 catkin_package()
 
@@ -14,16 +14,21 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-add_executable(joystick_demo src/joystick_demo.cpp src/JoystickDemo.cpp)
-add_dependencies(joystick_demo dbw_mkz_msgs_gencpp)
-target_link_libraries(joystick_demo
+add_executable(${PROJECT_NAME}_joystick_demo src/joystick_demo.cpp src/JoystickDemo.cpp)
+add_dependencies(${PROJECT_NAME}_joystick_demo ${catkin_EXPORTED_TARGETS})
+target_link_libraries(${PROJECT_NAME}_joystick_demo
   ${catkin_LIBRARIES}
 )
+set_target_properties(${PROJECT_NAME}_joystick_demo PROPERTIES OUTPUT_NAME joystick_demo PREFIX "")
 
-install(TARGETS joystick_demo
+install(TARGETS ${PROJECT_NAME}_joystick_demo
         RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
 install(DIRECTORY launch
         DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
+
+if (CATKIN_ENABLE_TESTING)
+  add_subdirectory(tests)
+endif()

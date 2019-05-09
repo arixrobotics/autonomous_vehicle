@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
-<package>
+<package format="2">
   <name>dbw_mkz</name>
-  <version>1.0.4</version>
+  <version>1.2.0</version>
   <description>
     Drive-by-wire interface to the Dataspeed Inc. Lincoln MKZ DBW kit
   </description>
@@ -15,11 +15,10 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
-  <run_depend>dbw_mkz_can</run_depend>
-  <run_depend>dbw_mkz_description</run_depend>
-  <run_depend>dbw_mkz_joystick_demo</run_depend>
-  <run_depend>dbw_mkz_msgs</run_depend>
-  <run_depend>dbw_mkz_twist_controller</run_depend>
+  <exec_depend>dbw_mkz_can</exec_depend>
+  <exec_depend>dbw_mkz_description</exec_depend>
+  <exec_depend>dbw_mkz_joystick_demo</exec_depend>
+  <exec_depend>dbw_mkz_msgs</exec_depend>
 
   <export>
     <metapackage/>

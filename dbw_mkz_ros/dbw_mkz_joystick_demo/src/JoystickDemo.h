@@ -1,7 +1,7 @@
 /*********************************************************************
  * Software License Agreement (BSD License)
  *
- *  Copyright (c) 2015-2016, Dataspeed Inc.
+ *  Copyright (c) 2015-2019, Dataspeed Inc.
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
@@ -37,27 +37,19 @@
 
 #include <ros/ros.h>
 #include <sensor_msgs/Joy.h>
-#include <std_msgs/Bool.h>
 #include <std_msgs/Empty.h>
 
 #include <dbw_mkz_msgs/ThrottleCmd.h>
 #include <dbw_mkz_msgs/BrakeCmd.h>
 #include <dbw_mkz_msgs/SteeringCmd.h>
 #include <dbw_mkz_msgs/GearCmd.h>
-#include <dbw_mkz_msgs/ThrottleReport.h>
-#include <dbw_mkz_msgs/BrakeReport.h>
-#include <dbw_mkz_msgs/SteeringReport.h>
-#include <dbw_mkz_msgs/GearReport.h>
-#include <dbw_mkz_msgs/Misc1Report.h>
 #include <dbw_mkz_msgs/TurnSignalCmd.h>
 
-namespace joystick_demo
-{
-
 typedef struct {
-  double brake_cmd;
-  double throttle_joy;
-  double steering_joy;
+  ros::Time stamp;
+  float brake_joy;
+  float throttle_joy;
+  float steering_joy;
   bool steering_mult;
   int gear_cmd;
   int turn_signal_cmd;
@@ -70,14 +62,12 @@ public:
   JoystickDemo(ros::NodeHandle &node, ros::NodeHandle &priv_nh);
 private:
   void recvJoy(const sensor_msgs::Joy::ConstPtr& msg);
-  void recvEnable(const std_msgs::Bool::ConstPtr& msg);
   void cmdCallback(const ros::TimerEvent& event);
 
   // Topics
   ros::Subscriber sub_joy_;
-  ros::Subscriber sub_enable_;
-  ros::Publisher pub_throttle_;
   ros::Publisher pub_brake_;
+  ros::Publisher pub_throttle_;
   ros::Publisher pub_steering_;
   ros::Publisher pub_gear_;
   ros::Publisher pub_turn_signal_;
@@ -85,15 +75,29 @@ private:
   ros::Publisher pub_disable_;
 
   // Parameters
+  bool brake_; // Send brake commands
+  bool throttle_; // Send throttle commands
+  bool steer_; // Send steering commands
+  bool shift_; // Send shift commands
+  bool signal_; // Send turn signal commands
+
+  // Parameters
+  float brake_gain_; // Adjust brake value
+  float throttle_gain_; // Adjust throttle value
+
+  // Parameters
   bool ignore_; // Ignore driver overrides
   bool enable_; // Use enable and disable buttons
   bool count_; // Increment counter to enable watchdog
+  bool strq_; // Steering torque command (otherwise angle)
+  float svel_; // Steering command speed
 
   // Variables
-  ros::Timer cmd_timer_;
-  JoystickDataStruct joy_data_;
-  sensor_msgs::Joy last_joy_;
+  ros::Timer timer_;
+  JoystickDataStruct data_;
+  sensor_msgs::Joy joy_;
   uint8_t counter_;
+  float last_steering_filt_output_;
 
   enum {
     BTN_PARK = 3,
@@ -104,14 +108,17 @@ private:
     BTN_DISABLE = 4,
     BTN_STEER_MULT_1 = 6,
     BTN_STEER_MULT_2 = 7,
+    BTN_COUNT_X = 11,
+    BTN_COUNT_D = 12,
     AXIS_THROTTLE = 5,
     AXIS_BRAKE = 2,
     AXIS_STEER_1 = 0,
     AXIS_STEER_2 = 3,
     AXIS_TURN_SIG = 6,
+    AXIS_COUNT_D = 6,
+    AXIS_COUNT_X = 8,
   };
 };
 
-}
-
 #endif /* JOYSTICKDEMO_H_ */
+

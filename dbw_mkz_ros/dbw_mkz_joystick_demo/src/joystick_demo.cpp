@@ -1,7 +1,7 @@
 /*********************************************************************
  * Software License Agreement (BSD License)
  *
- *  Copyright (c) 2015-2016, Dataspeed Inc.
+ *  Copyright (c) 2015-2019, Dataspeed Inc.
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
@@ -41,10 +41,12 @@ int main(int argc, char** argv)
   ros::NodeHandle node;
   ros::NodeHandle priv_nh("~");
 
-  // create DbwNode class
-  joystick_demo::JoystickDemo n(node, priv_nh);
+  // Create JoystickDemo class
+  JoystickDemo n(node, priv_nh);
 
+  // Handle callbacks until shutdown
   ros::spin();
 
   return 0;
 }
+

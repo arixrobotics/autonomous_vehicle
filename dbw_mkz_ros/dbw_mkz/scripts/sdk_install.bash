@@ -7,6 +7,9 @@ if [ -e /opt/ros/indigo/setup.bash ]; then
 elif [ -e /opt/ros/kinetic/setup.bash ]; then
   echo "Detected ROS Kinetic."
   source /opt/ros/kinetic/setup.bash
+elif [ -e /opt/ros/melodic/setup.bash ]; then
+  echo "Detected ROS Melodic."
+  source /opt/ros/melodic/setup.bash
 else
   echo "Failed to detected ROS version."
   exit 1
@@ -15,7 +18,7 @@ fi
 # Setup apt-get
 echo "Adding Dataspeed server to apt..."
 sudo sh -c 'echo "deb [ arch=amd64 ] http://packages.dataspeedinc.com/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-dataspeed-public.list'
-sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys FF6D3CDA
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 66F84AE1EB71A8AC108087DCAF677210FF6D3CDA
 sudo apt-get update
 
 # Setup rosdep
