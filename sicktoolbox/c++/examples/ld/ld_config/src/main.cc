@@ -28,8 +28,8 @@
 #include <stdlib.h>
 #include "ConfigFile.h"
 
-#define INVALID_OPTION_STRING        "   Invalid option!!! :o(" 
-#define PROMPT_STRING                                   "ld?> " 
+#define INVALID_OPTION_STRING        "   Invalid option!!! :o("
+#define PROMPT_STRING                                   "ld?> "
 
 /* Config file parameters */
 #define CONFIG_OPT_MOTOR_SPD_STR          "SICK_LD_MOTOR_SPEED"
@@ -89,7 +89,7 @@ void printConfig();
  *
  * This function separates the scan areas found in the config file
  * into two arrays - one with angles that the scan areas begin at,
- * and another with the angles that the scan areas end at. Uses 
+ * and another with the angles that the scan areas end at. Uses
  * setAngle()
  */
 bool parseScanAreasStr(string& scan_areas_str, double *start_angs, double *stop_angs, int& num_sectors);
@@ -109,7 +109,7 @@ SickLD *sick_ld = NULL;
 
 int main(int argc, char* argv[])
 {
-  
+
   string sick_ip_addr(DEFAULT_SICK_IP_ADDRESS);  // IP address of the Sick LD unit
 
   /* Check the num args */
@@ -118,7 +118,7 @@ int main(int argc, char* argv[])
 	      << "Ex. ld_config 192.168.1.11" << endl;
     return -1;
   }
-  
+
   /* Assign the IP address */
   if(argc == 2) {
     sick_ip_addr = argv[1];
@@ -151,7 +151,7 @@ int main(int argc, char* argv[])
     cout << "  [1] Set new configuration"<< endl;
     cout << "  [2] Show current settings"<< endl;
     cout << PROMPT_STRING;
-    
+
     bool is_null_input;
     switch(getUserOption(is_null_input)) {
 
@@ -161,20 +161,20 @@ int main(int argc, char* argv[])
     case 2:
       printConfig();
       break;
-    default:	
+    default:
       if(!is_null_input) {
 	cerr << INVALID_OPTION_STRING << endl;
       }
 
     }
-    
+
     cout << endl;
-    
+
   } while(true);
-  
+
   /* Success */
   return 0;
-  
+
 }
 
 /**
@@ -192,7 +192,7 @@ void sigintHandler(int signal) {
     delete sick_ld;
 
   }
-  
+
   catch(...) {
     cerr << "Uninitialize failed!" << endl;
     exit(-1);
@@ -203,7 +203,7 @@ void sigintHandler(int signal) {
   cout << "Bye Bye :o)" << endl;
 
   exit(0);
-  
+
 }
 
 /**
@@ -225,7 +225,7 @@ int getUserOption(bool &is_null_input) {
   input_stream >> int_val;
 
   return int_val;
-  
+
 }
 
 /**
@@ -239,7 +239,7 @@ string getFilename() {
   getline(cin,filename);
 
   return filename;
-  
+
 }
 
 /**
@@ -253,7 +253,7 @@ void setConfig() {
   double start_angs[SickLD::SICK_MAX_NUM_MEASURING_SECTORS] = {0};
   double stop_angs[SickLD::SICK_MAX_NUM_MEASURING_SECTORS] = {0};
   string scan_areas_str;
-  
+
   ConfigFile sick_config_file;	 // Extracts values from config file
   string config_path;
 
@@ -261,7 +261,7 @@ void setConfig() {
   config_path = getFilename();
 
   /* Instantiate the parser */
-  if(ifstream(config_path.c_str()) != NULL) {
+  if(ifstream(config_path.c_str()).is_open()) {
     sick_config_file = ConfigFile(config_path);
   }
   else {
@@ -272,14 +272,14 @@ void setConfig() {
   /* Use the ConfigFile class to extract the various parameters for
    * the sick configuration.
    *
-   * NOTE: The third parameter specifies the value to use, if the second 
+   * NOTE: The third parameter specifies the value to use, if the second
    *       parameter is not found in the file.
    */
   if(!sick_config_file.readInto(motor_spd,CONFIG_OPT_MOTOR_SPD_STR)) {
     cerr << "ERROR: Invalid config file - " << CONFIG_OPT_MOTOR_SPD_STR << " needs to be specified!" << endl;
     return;
   }
-  
+
   if(!sick_config_file.readInto(scan_res,CONFIG_OPT_SCAN_RES_STR)) {
     cerr << "ERROR: Invalid config file - " << CONFIG_OPT_SCAN_RES_STR << " needs to be specified!" << endl;
     return;
@@ -298,7 +298,7 @@ void setConfig() {
 
   /* Set the global parameters - we pass them all at once to ensure a feasible config */
   cout << endl << "\tAttempting to configure the Sick LD..." << endl;
-      
+
   try {
     sick_ld->SetSickGlobalParamsAndScanAreas(motor_spd,scan_res,start_angs,stop_angs,num_sectors);
   }
@@ -307,13 +307,13 @@ void setConfig() {
     cerr << "ERROR: Couldn't set requested configuration!" << endl;
     return;
   }
-  
+
   catch(...) {
     exit(-1);
   }
-  
+
   cout << "\t\tConfiguration Successfull!!!" << endl;
-  
+
 }
 
 /**
@@ -327,14 +327,14 @@ void printConfig() {
   sick_ld->PrintSickGlobalConfig();
   sick_ld->PrintSickEthernetConfig();
   sick_ld->PrintSickSectorConfig();
-  
+
 }
 
 /**
  * Parses scan areas string in order extract desired sector configuration
  */
 bool parseScanAreasStr(string& areas, double * start_angs, double * stop_angs, int& num_pairs) {
-  
+
   unsigned long i;		// number of sectors found so far
   unsigned int start_pos = 0;	// starting position of a sector in 'areas'
   unsigned int end_pos = 0;	// ending position of a sector in 'areas'
@@ -353,8 +353,8 @@ bool parseScanAreasStr(string& areas, double * start_angs, double * stop_angs, i
     pair = areas.substr(start_pos+1,end_pos-(start_pos+1));
 
     /* Eliminate any padding before first value */
-    try {      
-      pair = pair.substr(pair.find_first_not_of(' '));    
+    try {
+      pair = pair.substr(pair.find_first_not_of(' '));
     }
 
     catch(...) {
@@ -408,7 +408,7 @@ bool parseScanAreasStr(string& areas, double * start_angs, double * stop_angs, i
 
   /* Success! */
   return true;
-  
+
 }
 
 /**
@@ -417,8 +417,8 @@ bool parseScanAreasStr(string& areas, double * start_angs, double * stop_angs, i
 bool parseNumStr(const string& entry, double& num)
 {
 
-  string num_str = entry.substr(entry.find_first_not_of(' '));  
-  istringstream input_stream(num_str.c_str());  
+  string num_str = entry.substr(entry.find_first_not_of(' '));
+  istringstream input_stream(num_str.c_str());
   if(!(input_stream >> num)) {
     cerr << "ERROR: Invalid angle value: " + num_str << endl;
     return false;

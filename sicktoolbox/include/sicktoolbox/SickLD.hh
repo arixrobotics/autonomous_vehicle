@@ -65,36 +65,36 @@ namespace SickToolbox {
     static const uint16_t SICK_MIN_MOTOR_SPEED = 5;                                     ///< Minimum motor speed in Hz
     static const uint16_t SICK_MAX_MOTOR_SPEED = 20;                                    ///< Maximum motor speed in Hz
     static const uint16_t SICK_MIN_VALID_SENSOR_ID = 1;                                 ///< The lowest value the Sick will accept as a Sensor ID
-    static const uint16_t SICK_MAX_VALID_SENSOR_ID = 254;                               ///< The largest value the Sick will accept as a Sensor ID    
+    static const uint16_t SICK_MAX_VALID_SENSOR_ID = 254;                               ///< The largest value the Sick will accept as a Sensor ID
     static const uint16_t SICK_MAX_MEAN_PULSE_FREQUENCY = 10800;                        ///< Max mean pulse frequence of the current device configuration (in Hz) (see page 22 of the operator's manual)
     static const uint16_t SICK_MAX_PULSE_FREQUENCY = 14400;                             ///< Max pulse frequency of the device (in Hz) (see page 22 of the operator's manual)
     static const uint16_t SICK_NUM_TICKS_PER_MOTOR_REV = 5760;                          ///< Odometer ticks per revolution of the Sick LD scan head
-    static const double SICK_MAX_SCAN_ANGULAR_RESOLUTION = 0.125;                       ///< Minimum valid separation between laser pulses in active scan ares (deg)
-    static const double SICK_DEGREES_PER_MOTOR_STEP = 0.0625;                           ///< Each odometer tick is equivalent to rotating the scan head this many degrees
-    
+    static constexpr double SICK_MAX_SCAN_ANGULAR_RESOLUTION = 0.125;                       ///< Minimum valid separation between laser pulses in active scan ares (deg)
+    static constexpr double SICK_DEGREES_PER_MOTOR_STEP = 0.0625;                           ///< Each odometer tick is equivalent to rotating the scan head this many degrees
+
     /* Sick LD sensor modes of operation */
     static const uint8_t SICK_SENSOR_MODE_IDLE = 0x01;                                  ///< The Sick LD is powered but idle
     static const uint8_t SICK_SENSOR_MODE_ROTATE = 0x02;                                ///< The Sick LD prism is rotating, but laser is off
     static const uint8_t SICK_SENSOR_MODE_MEASURE = 0x03;                               ///< The Sick LD prism is rotating, and the laser is on
     static const uint8_t SICK_SENSOR_MODE_ERROR = 0x04;                                 ///< The Sick LD is in error mode
     static const uint8_t SICK_SENSOR_MODE_UNKNOWN = 0xFF;                               ///< The Sick LD is in an unknown state
-  
+
     /* Sick LD motor modes */
     static const uint8_t SICK_MOTOR_MODE_OK = 0x00;                                     ///< Motor is functioning properly
     static const uint8_t SICK_MOTOR_MODE_SPIN_TOO_HIGH = 0x09;                          ///< Motor spin too low (i.e. rotational velocity too low)
     static const uint8_t SICK_MOTOR_MODE_SPIN_TOO_LOW = 0x04;                           ///< Motor spin too high (i.e. rotational velocity too fast)
     static const uint8_t SICK_MOTOR_MODE_ERROR = 0x0B;                                  ///< Motor stops or coder error
     static const uint8_t SICK_MOTOR_MODE_UNKNOWN = 0xFF;                                ///< Motor is in an unknown state
-  
+
     /* Sick LD service codes */
-    static const uint8_t SICK_STAT_SERV_CODE = 0x01;                                    ///< Status service code 
+    static const uint8_t SICK_STAT_SERV_CODE = 0x01;                                    ///< Status service code
     static const uint8_t SICK_CONF_SERV_CODE = 0x02;                                    ///< Configuration service code
     static const uint8_t SICK_MEAS_SERV_CODE = 0x03;                                    ///< Measurement service code
     static const uint8_t SICK_WORK_SERV_CODE = 0x04;                                    ///< Working service code
     static const uint8_t SICK_ROUT_SERV_CODE = 0x06;                                    ///< Routing service code
-    static const uint8_t SICK_FILE_SERV_CODE = 0x07;                                    ///< File service code 
-    static const uint8_t SICK_MONR_SERV_CODE = 0x08;                                    ///< Monitor service code 
-  
+    static const uint8_t SICK_FILE_SERV_CODE = 0x07;                                    ///< File service code
+    static const uint8_t SICK_MONR_SERV_CODE = 0x08;                                    ///< Monitor service code
+
     /* Sick LD status services (service code 0x01) */
     static const uint8_t SICK_STAT_SERV_GET_ID = 0x01;                                  ///< Request the Sick LD ID
     static const uint8_t SICK_STAT_SERV_GET_STATUS = 0x02;                              ///< Request status information
@@ -114,7 +114,7 @@ namespace SickToolbox {
     static const uint8_t SICK_STAT_SERV_GET_ID_APP_PART_NUM = 0x20;                     ///< Request the application part number
     static const uint8_t SICK_STAT_SERV_GET_ID_APP_NAME = 0x21;                         ///< Request the application name
     static const uint8_t SICK_STAT_SERV_GET_ID_APP_VERSION = 0x22;                      ///< Request the application version
-  
+
     /* Sick LD configuration services (service code 0x02) */
     static const uint8_t SICK_CONF_SERV_SET_CONFIGURATION = 0x01;                       ///< Set the Sick LD configuration
     static const uint8_t SICK_CONF_SERV_GET_CONFIGURATION = 0x02;                       ///< Read the Sick LD configuration information
@@ -127,11 +127,11 @@ namespace SickToolbox {
 
     /* Sick LD configuration filter codes */
     static const uint8_t SICK_CONF_SERV_SET_FILTER_NEARFIELD = 0x01;                    ///< Code for identifying filter type: nearfield suppression
-  
+
     /* Sick LD nearfield suppression configuration codes */
     static const uint8_t SICK_CONF_SERV_SET_FILTER_NEARFIELD_OFF = 0x00;                ///< Used to set nearfield suppression off
     static const uint8_t SICK_CONF_SERV_SET_FILTER_NEARFIELD_ON = 0x01;                 ///< Used to set nearfield suppression on
-  
+
     /* Sick LD measurement services (service code 0x03) */
     static const uint8_t SICK_MEAS_SERV_GET_PROFILE = 0x01;                             ///< Requests n profiles of a defined format
     static const uint8_t SICK_MEAS_SERV_CANCEL_PROFILE = 0x02;                          ///< Stops profile output
@@ -140,7 +140,7 @@ namespace SickToolbox {
     static const uint8_t SICK_WORK_SERV_RESET = 0x01;                                   ///< Sick LD enters a reset sequence
     static const uint8_t SICK_WORK_SERV_TRANS_IDLE = 0x02;                              ///< Sick LD enters IDLE mode (motor stops and laser is turned off)
     static const uint8_t SICK_WORK_SERV_TRANS_ROTATE = 0x03;                            ///< Sick LD enters ROTATE mode (motor starts and rotates with a specified speed in Hz, laser is off)
-    static const uint8_t SICK_WORK_SERV_TRANS_MEASURE = 0x04;                           ///< Sick LD enters MEASURE mode (laser starts with next revolution) 
+    static const uint8_t SICK_WORK_SERV_TRANS_MEASURE = 0x04;                           ///< Sick LD enters MEASURE mode (laser starts with next revolution)
 
     /* Sick LD working service DO_RESET request codes */
     static const uint8_t SICK_WORK_SERV_RESET_INIT_CPU = 0x00;                          ///< Sick LD does a complete reset (Reinitializes the CPU)
@@ -153,11 +153,11 @@ namespace SickToolbox {
     static const uint8_t SICK_WORK_SERV_TRANS_MEASURE_RET_ERR_MEAN_PULSE = 0x02;        ///< Sick LD reports config yields a max mean pulse frequency that is too high
     static const uint8_t SICK_WORK_SERV_TRANS_MEASURE_RET_ERR_SECT_BORDER = 0x03;       ///< Sick LD reports sector borders are not configured correctly
     static const uint8_t SICK_WORK_SERV_TRANS_MEASURE_RET_ERR_SECT_BORDER_MULT = 0x04;  ///< Sick LD reports sector borders are not a multiple of the step angle
-  
+
     /* Sick LD interface routing services (service code 0x06) */
     static const uint8_t SICK_ROUT_SERV_COM_ATTACH = 0x01;                              ///< Attach a master (host) communications interface
     static const uint8_t SICK_ROUT_SERV_COM_DETACH = 0x02;                              ///< Detach a master (host) communications interface
-    static const uint8_t SICK_ROUT_SERV_COM_INITIALIZE = 0x03;                          ///< Initialize the interface (Note: using this may not be necessary for some interfaces, e.g. Ethernet) 
+    static const uint8_t SICK_ROUT_SERV_COM_INITIALIZE = 0x03;                          ///< Initialize the interface (Note: using this may not be necessary for some interfaces, e.g. Ethernet)
     static const uint8_t SICK_ROUT_SERV_COM_OUTPUT = 0x04;                              ///< Output data to the interface
     static const uint8_t SICK_ROUT_SERV_COM_DATA = 0x05;                                ///< Forward data received on specified interface to master interface
 
@@ -173,21 +173,21 @@ namespace SickToolbox {
 
     /* Sick LD configuration keys */
     static const uint8_t SICK_CONF_KEY_RS232_RS422 = 0x01;                              ///< Key for configuring RS-232/RS-422
-    static const uint8_t SICK_CONF_KEY_CAN = 0x02;                                      ///< Key for configuring CAN 
+    static const uint8_t SICK_CONF_KEY_CAN = 0x02;                                      ///< Key for configuring CAN
     static const uint8_t SICK_CONF_KEY_ETHERNET = 0x05;                                 ///< Key for configuring Ethernet
     static const uint8_t SICK_CONF_KEY_GLOBAL = 0x10;                                   ///< Key for global configuration
 
     /* Sick LD sector configuration codes */
     static const uint8_t SICK_CONF_SECTOR_NOT_INITIALIZED = 0x00;                       ///< Sector is uninitialized
     static const uint8_t SICK_CONF_SECTOR_NO_MEASUREMENT = 0x01;                        ///< Sector has no measurements
-    static const uint8_t SICK_CONF_SECTOR_RESERVED = 0x02;                              ///< Sector is reserved by Sick LD 
+    static const uint8_t SICK_CONF_SECTOR_RESERVED = 0x02;                              ///< Sector is reserved by Sick LD
     static const uint8_t SICK_CONF_SECTOR_NORMAL_MEASUREMENT = 0x03;                    ///< Sector is returning measurements
     static const uint8_t SICK_CONF_SECTOR_REFERENCE_MEASUREMENT = 0x04;                 ///< Sector can be used as reference measurement
 
     /* Sick LD profile formats */
     static const uint16_t SICK_SCAN_PROFILE_RANGE = 0x39FF;                             ///< Request sector scan data w/o any echo data
     /*
-     * SICK_SCAN_PROFILE_RANGE format (0x39FF) interpretation: 
+     * SICK_SCAN_PROFILE_RANGE format (0x39FF) interpretation:
      * (See page 32 of telegram listing for fieldname definitions)
      *
      * Field Name   | Send
@@ -211,7 +211,7 @@ namespace SickToolbox {
     /* Sick LD profile formats */
     static const uint16_t SICK_SCAN_PROFILE_RANGE_AND_ECHO = 0x3DFF;                    ///< Request sector scan data w/ echo data
     /*
-     * SICK_SCAN_PROFILE_RANGE format (0x3DFF) interpretation: 
+     * SICK_SCAN_PROFILE_RANGE format (0x3DFF) interpretation:
      * (See page 32 of telegram listing for fieldname definitions)
      *
      * Field Name   | Send
@@ -231,7 +231,7 @@ namespace SickToolbox {
      * ENDDIR       | YES
      * SENSTAT      | YES
      */
-  
+
     /* Masks for working with the Sick LD signals
      *
      * NOTE: Although the Sick LD manual defines the flag
@@ -260,9 +260,9 @@ namespace SickToolbox {
     typedef struct sick_ld_config_global_tag {
       uint16_t sick_sensor_id;                                                            ///< The single word sensor ID for the Sick unit
       uint16_t sick_motor_speed;                                                          ///< Nominal motor speed value: 0x0005 to 0x0014 (5 to 20)
-      double sick_angle_step;                                                             ///< Difference between two laser pulse positions in 1/16th deg. (NOTE: this value must be a divisor of 5760 and be greater than 1)  
+      double sick_angle_step;                                                             ///< Difference between two laser pulse positions in 1/16th deg. (NOTE: this value must be a divisor of 5760 and be greater than 1)
     } sick_ld_config_global_t;
-    
+
     /**
      * \struct sick_ld_config_ethernet_tag
      * \brief A structure to aggregate the data used to configure
@@ -281,7 +281,7 @@ namespace SickToolbox {
       uint16_t sick_node_id;                                                              ///< Single word address of the Sick LD
       uint16_t sick_transparent_tcp_port;                                                 ///< The TCP/IP transparent port associated with the Sick LD
     } sick_ld_config_ethernet_t;
-    
+
     /**
      * \struct sick_ld_config_sector_tag
      * \brief A structure to aggregate data used to define the
@@ -293,13 +293,13 @@ namespace SickToolbox {
      */
     typedef struct sick_ld_config_sector_tag {
       uint8_t sick_num_active_sectors;                                                    ///< Number of active sectors (sectors that are actually being scanned)
-      uint8_t sick_num_initialized_sectors;                                               ///< Number of sectors configured w/ a function other than "not initialized" 
+      uint8_t sick_num_initialized_sectors;                                               ///< Number of sectors configured w/ a function other than "not initialized"
       uint8_t sick_active_sector_ids[SICK_MAX_NUM_SECTORS];                               ///< IDs of all active sectors
       uint8_t sick_sector_functions[SICK_MAX_NUM_SECTORS];                                ///< Function values associated w/ each of the Sick LD's sectors
       double sick_sector_start_angles[SICK_MAX_NUM_SECTORS];                              ///< Start angles for each initialized sector (deg)
       double sick_sector_stop_angles[SICK_MAX_NUM_SECTORS];                               ///< Stop angles for each sector (deg)
     } sick_ld_config_sector_t;
-    
+
     /**
      * \struct sick_ld_identity_tag
      * \brief A structure to aggregate the fields that collectively
@@ -315,14 +315,14 @@ namespace SickToolbox {
       std::string sick_version;                                                           ///< The Sick LD's version number
       std::string sick_serial_number;                                                     ///< The Sick LD's serial number
       std::string sick_edm_serial_number;                                                 ///< The Sick LD's edm??? serial number
-      std::string sick_firmware_part_number;                                              ///< The Sick LD's firmware part number 
+      std::string sick_firmware_part_number;                                              ///< The Sick LD's firmware part number
       std::string sick_firmware_name;                                                     ///< The Sick LD's firmware name
       std::string sick_firmware_version;                                                  ///< The Sick LD's firmware version
       std::string sick_application_software_part_number;                                  ///< The Sick LD's app. software part number
       std::string sick_application_software_name;                                         ///< The Sick LD's app. software name
       std::string sick_application_software_version;                                      ///< The Sick LD's app. software version
     } sick_ld_identity_t;
-    
+
     /**
      * \struct sick_ld_sector_data_tag
      * \brief A structure to aggregate the fields that collectively
@@ -335,7 +335,7 @@ namespace SickToolbox {
     typedef struct sick_ld_sector_data_tag {
       unsigned int sector_num;                                                            ///< The sector number in the scan area
       unsigned int num_data_points;                                                       ///< The number of data points in the scan area
-      unsigned int timestamp_start;                                                       ///< The timestamp (in ms) corresponding to the time the first measurement in the sector was taken 
+      unsigned int timestamp_start;                                                       ///< The timestamp (in ms) corresponding to the time the first measurement in the sector was taken
       unsigned int timestamp_stop;                                                        ///< The timestamp (in ms) corresponding to the time the last measurement in the sector was taken
       unsigned int echo_values[SICK_MAX_NUM_MEASUREMENTS];                                ///< The corresponding echo/reflectivity values
       double angle_step;                                                                  ///< The angle step used for the given sector (this should be the same for all sectors)
@@ -344,7 +344,7 @@ namespace SickToolbox {
       double range_values[SICK_MAX_NUM_MEASUREMENTS];                                     ///< The corresponding range values (NOTE: The size of this array is intended to be large enough to accomodate various sector configs.)
       double scan_angles[SICK_MAX_NUM_MEASUREMENTS];                                      ///< The scan angles corresponding to the respective measurements
     } sick_ld_sector_data_t;
-    
+
     /**
      * \struct sick_ld_scan_profile_tag
      * \brief A structure to aggregate the fields that collectively
@@ -362,13 +362,13 @@ namespace SickToolbox {
       unsigned int sensor_status;                                                         ///< The status of the Sick LD sensor
       unsigned int motor_status;                                                          ///< The status of the Sick LD motor
       unsigned int num_sectors;                                                           ///< The number of sectors returned in the profile
-      sick_ld_sector_data_t sector_data[SICK_MAX_NUM_SECTORS];                            ///< The sectors associated with the scan profile 
+      sick_ld_sector_data_t sector_data[SICK_MAX_NUM_SECTORS];                            ///< The sectors associated with the scan profile
     } sick_ld_scan_profile_t;
-    
+
     /** Primary constructor */
     SickLD( const std::string sick_ip_address = DEFAULT_SICK_IP_ADDRESS,
 	    const uint16_t sick_tcp_port = DEFAULT_SICK_TCP_PORT );
-    
+
     /** Initializes the Sick LD unit (use scan areas defined in flash) */
     void Initialize( )  throw( SickIOException, SickThreadException, SickTimeoutException, SickErrorException );
 
@@ -380,7 +380,7 @@ namespace SickToolbox {
     void SetSickTempScanAreas( const double * active_sector_start_angles, const double * const active_sector_stop_angles,
 			       const unsigned int num_active_sectors )
       throw( SickTimeoutException, SickIOException, SickConfigException );
-    
+
     /** Sets the internal clock of the Sick LD unit */
     void SetSickTimeAbsolute( const uint16_t absolute_clock_time, uint16_t &new_sick_clock_time )
       throw( SickErrorException, SickTimeoutException, SickIOException, SickConfigException );
@@ -392,14 +392,14 @@ namespace SickToolbox {
     /** Gets the internal clock time of the Sick LD unit */
     void GetSickTime( uint16_t &sick_time )
       throw( SickIOException, SickTimeoutException, SickErrorException );
-  
+
     /** Sets the signal LEDs and switches */
     void SetSickSignals( const uint8_t sick_signal_flags = DEFAULT_SICK_SIGNAL_SET )
       throw( SickIOException, SickTimeoutException, SickErrorException );
 
     /** Query the Sick for its current signal settings */
     void GetSickSignals( uint8_t &sick_signal_flags ) throw( SickIOException, SickTimeoutException );
-  
+
     /** Enables nearfield suppressive filtering (in flash) */
     void EnableNearfieldSuppression( ) throw( SickErrorException, SickTimeoutException, SickIOException );
 
@@ -451,7 +451,7 @@ namespace SickToolbox {
 
     /** Returns the number of active/measuring sectors */
     unsigned int GetSickNumActiveSectors( ) const;
-  
+
     /** Acquire the Sick LD's sensor ID */
     unsigned int GetSickSensorID( ) const;
 
@@ -460,16 +460,16 @@ namespace SickToolbox {
 
     /** Acquire the Sick LD's current scan resolution */
     double GetSickScanResolution( ) const;
-  
+
     /** Acquire the current IP address of the Sick */
     std::string GetSickIPAddress( ) const;
-  
+
     /** Acquire the subnet mask for the Sick */
     std::string GetSickSubnetMask( ) const;
-  
+
     /** Acquire the IP address of the Sick gateway */
     std::string GetSickGatewayIPAddress( ) const;
-  
+
     /** Acquire the Sick LD's part number */
     std::string GetSickPartNumber( ) const;
 
@@ -517,10 +517,10 @@ namespace SickToolbox {
 
     /** Acquire the Sick LD's sector config as a printable string */
     std::string GetSickSectorConfigAsString() const;
-    
+
     /** Acquire the total scan area (in degrees) being scanned by the Sick LD */
     double GetSickScanArea( ) const;
-  
+
     /** Prints the Sick LD's status information */
     void PrintSickStatus( ) const;
 
@@ -535,7 +535,7 @@ namespace SickToolbox {
 
     /** Prints the Sick Sector configuration */
     void PrintSickSectorConfig( ) const;
-  
+
     /** Uninitializes the Sick LD unit */
     void Uninitialize( ) throw( SickIOException, SickTimeoutException, SickErrorException, SickThreadException );
 
@@ -552,7 +552,7 @@ namespace SickToolbox {
 
     /** Sick LD socket structure */
     unsigned int _socket;
-  
+
     /** Sick LD socket address structure */
     struct sockaddr_in _sick_inet_address_info;
 
@@ -567,13 +567,13 @@ namespace SickToolbox {
 
     /** Indicates whether the Sick LD is currently streaming range and echo data */
     bool _sick_streaming_range_and_echo_data;
-  
+
     /** The identity structure for the Sick */
     sick_ld_identity_t _sick_identity;
 
     /** The current global configuration for the unit */
     sick_ld_config_global_t _sick_global_config;
-  
+
     /** The current Ethernet configuration for the unit */
     sick_ld_config_ethernet_t _sick_ethernet_config;
 
@@ -582,7 +582,7 @@ namespace SickToolbox {
 
     /** Setup the connection parameters and establish TCP connection! */
     void _setupConnection( ) throw( SickIOException, SickTimeoutException );
-  
+
     /** Synchronizes the driver state with the Sick LD (used for initialization) */
     void _syncDriverWithSick( ) throw( SickIOException, SickTimeoutException, SickErrorException );
 
@@ -590,11 +590,11 @@ namespace SickToolbox {
     void _setSickSectorFunction( const uint8_t sector_number, const uint8_t sector_function,
 				 const double sector_angle_stop, const bool write_to_flash = false )
        throw( SickErrorException, SickTimeoutException, SickIOException, SickConfigException );
-  
+
     /** Acquires the given Sector's function (i.e. current config) */
     void _getSickSectorFunction( const uint8_t sector_num, uint8_t &sector_function, double &sector_stop_angle )
       throw( SickErrorException, SickTimeoutException, SickIOException );
-  
+
     /** Sets the Sick LD to IDLE mode */
     void _setSickSensorModeToIdle( ) throw( SickErrorException, SickTimeoutException, SickIOException );
 
@@ -603,11 +603,11 @@ namespace SickToolbox {
 
     /** Sets the Sick LD to MEASURE mode */
     void _setSickSensorModeToMeasure( ) throw( SickErrorException, SickTimeoutException, SickIOException );
-  
+
     /** Sets the Sick LD's sensor mode to IDLE (laser off, motor off) */
     void _setSickSensorMode( const uint8_t new_sick_sensor_mode )
       throw( SickErrorException, SickTimeoutException, SickIOException );
-  
+
     /** Requests n range measurement profiles from the Sick LD */
     void _getSickScanProfiles( const uint16_t profile_format, const uint16_t num_profiles = DEFAULT_SICK_NUM_SCAN_PROFILES )
       throw( SickErrorException, SickTimeoutException, SickIOException, SickConfigException );
@@ -621,7 +621,7 @@ namespace SickToolbox {
     /** Turns nearfield suppression on/off */
     void _setSickFilter( const uint8_t suppress_code )
       throw( SickErrorException, SickTimeoutException, SickIOException );
-  
+
     /** Stores an image of the Sick LD's identity locally */
     void _getSickIdentity( ) throw( SickTimeoutException, SickIOException );
 
@@ -640,11 +640,11 @@ namespace SickToolbox {
 
     /** Acquires the configuration (function and stop angle) for each sector */
     void _getSickSectorConfig( ) throw( SickErrorException, SickTimeoutException, SickIOException );
-  
+
     /** Query the Sick for ID information */
     void _getIdentificationString( const uint8_t id_request_code, std::string &id_return_string )
       throw( SickTimeoutException, SickIOException );
-  
+
     /** Query the Sick for its sensor part number */
     void _getSensorPartNumber( ) throw( SickTimeoutException, SickIOException );
 
@@ -699,15 +699,15 @@ namespace SickToolbox {
     /** Sets the signals for the device */
     void _setSickSignals( const uint8_t sick_signal_flags = DEFAULT_SICK_SIGNAL_SET )
       throw( SickIOException, SickTimeoutException, SickErrorException );
-  
+
     /** Send a message, get the reply from the Sick LD and check it */
     void _sendMessageAndGetReply( const SickLDMessage &send_message, SickLDMessage &recv_message,
-				  const unsigned int timeout_value = DEFAULT_SICK_MESSAGE_TIMEOUT ) 
+				  const unsigned int timeout_value = DEFAULT_SICK_MESSAGE_TIMEOUT )
       throw( SickIOException, SickTimeoutException );
 
     /** Flushed the TCP receive buffer */
     void _flushTCPRecvBuffer( ) throw ( SickIOException, SickThreadException );
-    
+
     /** Teardown the connection to the Sick LD */
     void _teardownConnection( ) throw( SickIOException );
 
@@ -716,10 +716,10 @@ namespace SickToolbox {
 				    const double * const active_sector_stop_angles,
 				    const unsigned int num_active_sectors,
 				    const double sick_step_angle,
-				    unsigned int * const sector_functions, 
+				    unsigned int * const sector_functions,
 				    double * const sector_stop_angles,
 				    unsigned int &num_sectors ) const;
-  
+
     /** Converts odometry ticks to an equivalent angle */
     double _ticksToAngle( const uint16_t ticks ) const;
 
@@ -729,7 +729,7 @@ namespace SickToolbox {
     /** Computes the mean pulse frequency for the given config */
     double _computeMeanPulseFrequency( const double active_scan_area, const double curr_motor_speed,
 				       const double curr_angular_resolution ) const;
-  
+
     /** Computes the total pulse frequency for the given config */
     double _computeMaxPulseFrequency( const double total_scan_area, const double curr_motor_speed,
 				      const double curr_angular_resolution ) const;
@@ -746,13 +746,13 @@ namespace SickToolbox {
 
     /** Indicates whether the given configuration yields a valid max and mean pulse frequency */
     bool _validPulseFrequency( const unsigned int sick_motor_speed, const double sick_step_angle ) const;
-  
+
     /** Indicates whether the given configuration yields a valid max and mean pulse frequency */
     bool _validPulseFrequency( const unsigned int sick_motor_speed, const double sick_step_angle,
 			       const double * const active_sector_start_angles,
 			       const double * const active_sector_stop_angles,
 			       const unsigned int num_active_sectors ) const;
-  
+
     /** Returns the scanning area for the device given the current sector configuration */
     double _computeScanArea( const double sick_step_angle, const double * const sector_start_angles,
 			     const double * const sector_stop_angles, const unsigned int num_sectors ) const;
@@ -764,9 +764,9 @@ namespace SickToolbox {
     /** Checks the given sector arguments for overlapping regions yielding an invalid configuration */
     bool _validActiveSectors( const double * const sector_start_angles, const double * const sector_stop_angles,
 			      const unsigned int num_active_sectors ) const;
-    
+
     /** Indicates whether the supplied profile format is currently supported by the driver */
-    bool _supportedScanProfileFormat( const uint16_t profile_format ) const; 
+    bool _supportedScanProfileFormat( const uint16_t profile_format ) const;
 
     /** Prints data corresponding to a single scan sector (data obtained using GET_PROFILE) */
     void _printSectorProfileData( const sick_ld_sector_data_t &sector_data ) const;
@@ -779,19 +779,19 @@ namespace SickToolbox {
 
     /** Converts _sick_sensor_mode to a representative string */
     std::string _sickSensorModeToString( const uint8_t sick_sensor_mode ) const;
- 
+
     /** Converts _sick_motor_mode to a representative string */
     std::string _sickMotorModeToString( const uint8_t sick_motor_mode ) const;
 
     /** Converts the specified trans measurement mode return value to a string */
     std::string _sickTransMeasureReturnToString( const uint8_t return_value ) const;
-  
+
     /** Converts the specified reset level to a representative string */
     std::string _sickResetLevelToString( const uint16_t reset_level ) const;
-  
+
     /** Converts Sick LD sector configuration word to a representative string */
     std::string _sickSectorFunctionToString( const uint16_t sick_sector_function ) const;
-  
+
     /** Converts a given scan profile format to a string for friendlier output */
     std::string _sickProfileFormatToString( const uint16_t profile_format ) const;
 
@@ -801,5 +801,5 @@ namespace SickToolbox {
   };
 
 } //namespace SickToolbox
-  
+
 #endif /* SICK_LD_HH */
